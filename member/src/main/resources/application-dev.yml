@@ -1,0 +1,10 @@
+# 配置数据库连接
+demo:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    password: 1
+    host: 192.168.137.128
+    port: 3306
+    database: train_member
+    username: root
+    # url: jdbc:mysql://192.168.137.128:3306/train_member

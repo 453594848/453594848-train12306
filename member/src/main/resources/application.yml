@@ -1,0 +1,19 @@
+server:
+    port: 8001
+    servlet:
+        context-path: /member
+mybatis:
+  mapper-locations: classpath:/mapper/**/*.xml
+
+spring:
+  application:
+    name: demo # 设置应用程序的名称为 'demo'
+  profiles:
+    active: dev  # 设置默认激活的配置文件
+  main:
+    allow-circular-references: true  # 允许循环引用
+  datasource:
+    driver-class-name: ${demo.datasource.driver-class-name}
+    url: jdbc:mysql://${demo.datasource.host}:${demo.datasource.port}/${demo.datasource.database}
+    username: ${demo.datasource.username}
+    password: ${demo.datasource.password}
