@@ -11,4 +11,4 @@ GET http://localhost:8000/member/member/count
 POST http://localhost:8000/member/member/register
 Content-Type: application/x-www-form-urlencoded
 
-mobile=1111
+mobile=11111
