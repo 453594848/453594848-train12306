@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import com.train.member.domain.Member;
 import com.train.member.domain.MemberExample;
 import com.train.member.mapper.MemberMapper;
+import com.train.member.req.MemberRegisterReq;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
@@ -18,9 +19,10 @@ public class MemberService {
         return Math.toIntExact(memberMapper.countByExample(null));
     }
 
-    public long register(String phone) {
+    public long register(MemberRegisterReq memberRegisterReq) {
+        String mobile = memberRegisterReq.getMobile();
         MemberExample memberExample = new MemberExample();
-        memberExample.createCriteria().andMobileEqualTo(phone);
+        memberExample.createCriteria().andMobileEqualTo(mobile);
         List<Member> members = memberMapper.selectByExample(memberExample);
         if(CollUtil.isNotEmpty(members)){
             throw new  RuntimeException("手机号已注册");
@@ -28,7 +30,7 @@ public class MemberService {
 
         Member member = new Member();
         member.setId(System.currentTimeMillis());
-        member.setMobile(phone);
+        member.setMobile(mobile);
         memberMapper.insert(member);
         return member.getId();
     }
