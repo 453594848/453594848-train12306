@@ -33,7 +33,7 @@ public class MemberController {
     }
 
     @PostMapping("/send-code")
-    public CommonResp<Long> sendCode(@Valid MemberSendCodeReq memberSendCodeReq) {
+    public CommonResp<Long> sendCode(@Valid @RequestBody MemberSendCodeReq memberSendCodeReq) {
         memberService.sendCode(memberSendCodeReq);
         return new CommonResp<>();
     }
