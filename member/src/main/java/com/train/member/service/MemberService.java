@@ -5,6 +5,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.train.common.exception.BusinessException;
 import com.train.common.exception.BusinessExceptionEnum;
+import com.train.common.util.JwtUtil;
 import com.train.common.util.SnowUtil;
 import com.train.member.domain.Member;
 import com.train.member.domain.MemberExample;
@@ -39,7 +40,7 @@ public class MemberService {
      */
     public long register(MemberRegisterReq memberRegisterReq) {
         String mobile = memberRegisterReq.getMobile();
-       Member memberDB = selectByMobile(mobile);
+        Member memberDB = selectByMobile(mobile);
 
         if (ObjectUtil.isNull(memberDB)) {
             // return list.get(0).getId();
@@ -54,7 +55,6 @@ public class MemberService {
     }
 
     /**
-     *
      * @param mobile
      * @return
      */
@@ -74,9 +74,9 @@ public class MemberService {
      */
     public void sendCode(MemberSendCodeReq memberSendCodeReq) {
         String mobile = memberSendCodeReq.getMobile();
-         Member memberDB = selectByMobile(mobile);
+        Member memberDB = selectByMobile(mobile);
         //手机号不存在
-       // 如果手机号不存在，则插入一条记录
+        // 如果手机号不存在，则插入一条记录
         if (ObjectUtil.isNull(memberDB)) {
             LOG.info("手机号不存在，插入一条记录");
             Member member = new Member();
@@ -102,7 +102,7 @@ public class MemberService {
         String mobile = req.getMobile();
         String code = req.getCode();
 
-       Member memberDB = selectByMobile(mobile);
+        Member memberDB = selectByMobile(mobile);
 
         // 如果手机号不存在，则插入一条记录
         if (ObjectUtil.isNull(memberDB)) {
@@ -114,8 +114,9 @@ public class MemberService {
             throw new BusinessException(BusinessExceptionEnum.MEMBER_MOBILE_CODE_ERROR);
         }
 
-        //        String token = JwtUtil.createToken(memberLoginResp.getId(), memberLoginResp.getMobile());
-//        memberLoginResp.setToken(token);
-        return BeanUtil.copyProperties(memberDB, MemberLoginResp.class);
+        MemberLoginResp memberLoginResp = BeanUtil.copyProperties(memberDB, MemberLoginResp.class);
+        String token = JwtUtil.createToken(memberLoginResp.getId(), memberLoginResp.getMobile());
+        memberLoginResp.setToken(token);
+        return memberLoginResp;
     }
 }
