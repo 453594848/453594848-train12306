@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import { defineComponent, ref, onMounted } from 'vue';
+import {defineComponent, onMounted, ref} from 'vue';
 import {notification} from "ant-design-vue";
 import axios from "axios";
 

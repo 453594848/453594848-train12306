@@ -38,10 +38,10 @@
 </template>
 
 <script>
-import { defineComponent, reactive } from 'vue';
+import {defineComponent, reactive} from 'vue';
 import axios from 'axios';
-import { notification } from 'ant-design-vue';
-import { useRouter } from 'vue-router'
+import {notification} from 'ant-design-vue';
+import {useRouter} from 'vue-router'
 import store from "@/store";
 
 export default defineComponent({

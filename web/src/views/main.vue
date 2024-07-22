@@ -12,7 +12,7 @@
   </a-layout>
 </template>
 <script>
-import { defineComponent } from 'vue';
+import {defineComponent} from 'vue';
 import TheHeaderView from "@/components/the-header";
 import TheSiderView from "@/components/the-sider";
 
