@@ -62,12 +62,5 @@ public class JwtUtil {
         return payloads;
     }
 
-   /* public static void main(String[] args) {
-        createToken(1L, "123");
 
-        String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE3MjE1NjUwMzQsIm1vYmlsZSI6IjExMTExMjIyMjIyIiwiaWQiOjE4MTQwMjYyOTcyNTc2Mjc2NDgsImV4cCI6MTcyMTY1MTQzNCwiaWF0IjoxNzIxNTY1MDM0fQ.l8P1IUszV6KNmbR6hQzVYgu5gzAmFxc0y8ji-EZOgGs";
-        validate(token);
-
-        getJSONObject(token);
-    }*/
 }
