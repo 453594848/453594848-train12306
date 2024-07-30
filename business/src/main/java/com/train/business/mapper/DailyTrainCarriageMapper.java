@@ -2,9 +2,8 @@ package com.train.business.mapper;
 
 import com.train.business.domain.DailyTrainCarriage;
 import com.train.business.domain.DailyTrainCarriageExample;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface DailyTrainCarriageMapper {
     long countByExample(DailyTrainCarriageExample example);

@@ -2,9 +2,8 @@ package com.train.business.mapper;
 
 import com.train.business.domain.DailyTrainStation;
 import com.train.business.domain.DailyTrainStationExample;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface DailyTrainStationMapper {
     long countByExample(DailyTrainStationExample example);

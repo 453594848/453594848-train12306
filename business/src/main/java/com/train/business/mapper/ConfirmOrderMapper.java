@@ -2,9 +2,8 @@ package com.train.business.mapper;
 
 import com.train.business.domain.ConfirmOrder;
 import com.train.business.domain.ConfirmOrderExample;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface ConfirmOrderMapper {
     long countByExample(ConfirmOrderExample example);
