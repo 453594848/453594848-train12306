@@ -1,21 +1,24 @@
 <template>
   <p>
     <a-space>
-      <a-date-picker v-model:value="params.date" valueFormat="YYYY-MM-DD" :disabled-date="disabledDate" placeholder="请选择日期"></a-date-picker>
+      <a-date-picker v-model:value="params.date" :disabled-date="disabledDate" placeholder="请选择日期"
+                     valueFormat="YYYY-MM-DD"></a-date-picker>
       <station-select-view v-model="params.start" width="200px"></station-select-view>
       <station-select-view v-model="params.end" width="200px"></station-select-view>
       <a-button type="primary" @click="handleQuery()">查找</a-button>
     </a-space>
   </p>
-  <a-table :dataSource="dailyTrainTickets"
-           :columns="columns"
+  <a-table :columns="columns"
+           :dataSource="dailyTrainTickets"
+           :loading="loading"
            :pagination="pagination"
-           @change="handleTableChange"
-           :loading="loading">
+           @change="handleTableChange">
     <template #bodyCell="{ column, record }">
       <template v-if="column.dataIndex === 'operation'">
         <a-space>
-          <a-button type="primary" @click="toOrder(record)" :disabled="isExpire(record)">{{isExpire(record) ? "过期" : "预订"}}</a-button>
+          <a-button :disabled="isExpire(record)" type="primary" @click="toOrder(record)">
+            {{ isExpire(record) ? "过期" : "预订" }}
+          </a-button>
           <router-link :to="{
             path: '/seat',
             query: {
@@ -33,15 +36,15 @@
         </a-space>
       </template>
       <template v-else-if="column.dataIndex === 'station'">
-        {{record.start}}<br/>
-        {{record.end}}
+        {{ record.start }}<br/>
+        {{ record.end }}
       </template>
       <template v-else-if="column.dataIndex === 'time'">
-        {{record.startTime}}<br/>
-        {{record.endTime}}
+        {{ record.startTime }}<br/>
+        {{ record.endTime }}
       </template>
       <template v-else-if="column.dataIndex === 'duration'">
-        {{calDuration(record.startTime, record.endTime)}}<br/>
+        {{ calDuration(record.startTime, record.endTime) }}<br/>
         <div v-if="record.startTime.replaceAll(':', '') >= record.endTime.replaceAll(':', '')">
           次日到达
         </div>
@@ -51,8 +54,8 @@
       </template>
       <template v-else-if="column.dataIndex === 'ydz'">
         <div v-if="record.ydz >= 0">
-          {{record.ydz}}<br/>
-          {{record.ydzPrice}}￥
+          {{ record.ydz }}<br/>
+          {{ record.ydzPrice }}￥
         </div>
         <div v-else>
           --
@@ -60,8 +63,8 @@
       </template>
       <template v-else-if="column.dataIndex === 'edz'">
         <div v-if="record.edz >= 0">
-          {{record.edz}}<br/>
-          {{record.edzPrice}}￥
+          {{ record.edz }}<br/>
+          {{ record.edzPrice }}￥
         </div>
         <div v-else>
           --
@@ -69,8 +72,8 @@
       </template>
       <template v-else-if="column.dataIndex === 'rw'">
         <div v-if="record.rw >= 0">
-          {{record.rw}}<br/>
-          {{record.rwPrice}}￥
+          {{ record.rw }}<br/>
+          {{ record.rwPrice }}￥
         </div>
         <div v-else>
           --
@@ -78,8 +81,8 @@
       </template>
       <template v-else-if="column.dataIndex === 'yw'">
         <div v-if="record.yw >= 0">
-          {{record.yw}}<br/>
-          {{record.ywPrice}}￥
+          {{ record.yw }}<br/>
+          {{ record.ywPrice }}￥
         </div>
         <div v-else>
           --
@@ -89,23 +92,23 @@
   </a-table>
 
   <!-- 途经车站 -->
-  <a-modal style="top: 30px" v-model:visible="visible" :title="null" :footer="null" :closable="false">
+  <a-modal v-model:visible="visible" :closable="false" :footer="null" :title="null" style="top: 30px">
     <a-table :data-source="stations" :pagination="false">
-      <a-table-column key="index" title="站序" data-index="index" />
-      <a-table-column key="name" title="站名" data-index="name" />
-      <a-table-column key="inTime" title="进站时间" data-index="inTime">
+      <a-table-column key="index" data-index="index" title="站序"/>
+      <a-table-column key="name" data-index="name" title="站名"/>
+      <a-table-column key="inTime" data-index="inTime" title="进站时间">
         <template #default="{ record }">
-          {{record.index === 0 ? '-' : record.inTime}}
+          {{ record.index === 0 ? '-' : record.inTime }}
         </template>
       </a-table-column>
-      <a-table-column key="outTime" title="出站时间" data-index="outTime">
+      <a-table-column key="outTime" data-index="outTime" title="出站时间">
         <template #default="{ record }">
-          {{record.index === (stations.length - 1) ? '-' : record.outTime}}
+          {{ record.index === (stations.length - 1) ? '-' : record.outTime }}
         </template>
       </a-table-column>
-      <a-table-column key="stopTime" title="停站时长" data-index="stopTime">
+      <a-table-column key="stopTime" data-index="stopTime" title="停站时长">
         <template #default="{ record }">
-          {{record.index === 0 || record.index === (stations.length - 1) ? '-' : record.stopTime}}
+          {{ record.index === 0 || record.index === (stations.length - 1) ? '-' : record.stopTime }}
         </template>
       </a-table-column>
     </a-table>
@@ -158,47 +161,47 @@ export default defineComponent({
     let loading = ref(false);
     const params = ref({});
     const columns = [
-    {
-      title: '车次编号',
-      dataIndex: 'trainCode',
-      key: 'trainCode',
-    },
-    {
-      title: '车站',
-      dataIndex: 'station',
-    },
-    {
-      title: '时间',
-      dataIndex: 'time',
-    },
-    {
-      title: '历时',
-      dataIndex: 'duration',
-    },
-    {
-      title: '一等座',
-      dataIndex: 'ydz',
-      key: 'ydz',
-    },
-    {
-      title: '二等座',
-      dataIndex: 'edz',
-      key: 'edz',
-    },
-    {
-      title: '软卧',
-      dataIndex: 'rw',
-      key: 'rw',
-    },
-    {
-      title: '硬卧',
-      dataIndex: 'yw',
-      key: 'yw',
-    },
-    {
-      title: '操作',
-      dataIndex: 'operation',
-    },
+      {
+        title: '车次编号',
+        dataIndex: 'trainCode',
+        key: 'trainCode',
+      },
+      {
+        title: '车站',
+        dataIndex: 'station',
+      },
+      {
+        title: '时间',
+        dataIndex: 'time',
+      },
+      {
+        title: '历时',
+        dataIndex: 'duration',
+      },
+      {
+        title: '一等座',
+        dataIndex: 'ydz',
+        key: 'ydz',
+      },
+      {
+        title: '二等座',
+        dataIndex: 'edz',
+        key: 'edz',
+      },
+      {
+        title: '软卧',
+        dataIndex: 'rw',
+        key: 'rw',
+      },
+      {
+        title: '硬卧',
+        dataIndex: 'yw',
+        key: 'yw',
+      },
+      {
+        title: '操作',
+        dataIndex: 'operation',
+      },
     ];
 
 

@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 public class MemberLoginReq {
     @NotBlank(message = "手机号不能为空")
-    @Pattern(regexp = "^(?:(?:\\+|00)86)?1\\d{10}$",message = "手机号码错误")
+    @Pattern(regexp = "^(?:(?:\\+|00)86)?1\\d{10}$", message = "手机号码错误")
     private String mobile;
 
     @NotBlank(message = "验证码不能为空")

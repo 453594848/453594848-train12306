@@ -24,8 +24,8 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class PassengerService {
-    final private PassengerMapper passengerMapper;
     private static final Logger LOG = LoggerFactory.getLogger(PassengerService.class);
+    final private PassengerMapper passengerMapper;
 
     public void save(PassengerSaveReq req) {
         DateTime now = DateTime.now();

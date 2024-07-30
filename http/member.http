@@ -1,8 +1,10 @@
 GET http://localhost:8001/member/hello
 Accept: application/json
+
 ###
 GET http://localhost:8000/member/hello
 Accept: application/json
+
 ###
 GET http://localhost:8000/member/member/count
 Accept: application/json
@@ -15,7 +17,7 @@ POST http://localhost:8000/member/member/send-code
 Content-Type: application/json
 
 {
-  "mobile":"11111222222"
+  "mobile": "11111222222"
 }
 
 
@@ -24,14 +26,14 @@ POST http://localhost:8000/member/member/login
 Content-Type: application/json
 
 {
-  "mobile":"11111222222",
+  "mobile": "11111222222",
   "code": "8888"
 }
 
 > {%
-client.log(JSON.stringify(response.body));
-client.log(JSON.stringify(response.body.content.token));
-client.global.set("token", response.body.content.token);
+    client.log(JSON.stringify(response.body));
+    client.log(JSON.stringify(response.body.content.token));
+    client.global.set("token", response.body.content.token);
 %}
 
 ###

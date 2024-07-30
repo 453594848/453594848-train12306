@@ -1,7 +1,7 @@
 server:
-    port: 8001
-    servlet:
-        context-path: /member
+  port: 8001
+  servlet:
+    context-path: /member
 
 mybatis:
   mapper-locations: classpath:/mapper/**/*.xml # 实现mapper接口配置见mapper和接口的绑定

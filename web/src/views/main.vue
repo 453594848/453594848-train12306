@@ -22,8 +22,7 @@ export default defineComponent({
     TheHeaderView,
   },
   setup() {
-    return {
-    };
+    return {};
   },
 });
 </script>

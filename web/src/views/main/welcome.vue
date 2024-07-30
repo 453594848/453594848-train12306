@@ -12,13 +12,16 @@
     <li>利用<b>分布式缓存</b>，在秒杀开始前，提供高性能余票查询，同时要考虑缓存击穿、穿透、雪崩等问题</li>
     <li>使用<b>第一层验证码</b>，纯前端验证码在前端削弱瞬时高峰，将100毫秒内10万人的请求，分散成1~2秒内10万人请求</li>
     <li>使用<b>第二层验证码</b>，后端验证码，进一步分散请求，同时防止机器人抢票</li>
-    <li>使用<b>限流技术</b>减轻无谓请求，同时给用户快速失败响应（告知票没有了），将9万请求快速失败，变成1万请求抢1000张票</li>
-    <li>使用<b>令牌发放技术</b>，控制抢票量，同时防止机器人刷票，比如开放2000令牌，即变成8000请求快速失败，变成2000请求抢1000张票</li>
+    <li>使用<b>限流技术</b>减轻无谓请求，同时给用户快速失败响应（告知票没有了），将9万请求快速失败，变成1万请求抢1000张票
+    </li>
+    <li>使用<b>令牌发放技术</b>，控制抢票量，同时防止机器人刷票，比如开放2000令牌，即变成8000请求快速失败，变成2000请求抢1000张票
+    </li>
     <li>使用<b>分布式锁技术</b>，防止超卖，即2000人抢1000张票，最终只能卖出1000张，不能卖出1001张票</li>
-    <li>使用<b>异步削峰+排队机制</b>，解决吞吐量问题，实现最短时间内给用户反馈，1000请求告知票没有了，1000请求告知排队中</li>
+    <li>使用<b>异步削峰+排队机制</b>，解决吞吐量问题，实现最短时间内给用户反馈，1000请求告知票没有了，1000请求告知排队中
+    </li>
     <li>使用<b>分布式事务</b>，保证数据最终一致性，不能库存减少了，票却没打出来。</li>
   </div>
-  <a-divider style="border-color: #7cb305" dashed />
+  <a-divider dashed style="border-color: #7cb305"/>
   <div style="border: 4px solid #99CCFF;
               border-radius: 4px;
               padding: 10px; ">
@@ -54,7 +57,7 @@
     </div>
   </div>
 
-  <a-divider style="border-color: #7cb305" dashed />
+  <a-divider dashed style="border-color: #7cb305"/>
   <div style="border: 4px solid orange;
               border-radius: 4px;
               padding: 10px; ">
@@ -66,10 +69,11 @@
       </b>
     </h3>
     <div>
-      慕课网明星讲师“甲蛙”全新力作：一套市面稀缺的，手把手教你完整落地“高并发，高可用，高性能” 整体解决方案实战课。课程以12306售票系统驱动教学，融合老师多年大厂超大型项目架构设计与实战经验，带你从架构设计到具体场景方案落地，真正驾驭超高并发场景下的各种疑难问题，成为高薪抢手人才。
+      慕课网明星讲师“甲蛙”全新力作：一套市面稀缺的，手把手教你完整落地“高并发，高可用，高性能”
+      整体解决方案实战课。课程以12306售票系统驱动教学，融合老师多年大厂超大型项目架构设计与实战经验，带你从架构设计到具体场景方案落地，真正驾驭超高并发场景下的各种疑难问题，成为高薪抢手人才。
     </div>
   </div>
-  <a-divider style="border-color: #7cb305" dashed />
+  <a-divider dashed style="border-color: #7cb305"/>
   <div style="border: 4px solid #99CCFF;
               border-radius: 4px;
               padding: 10px; ">
@@ -87,28 +91,35 @@
         <a href="https://coding.imooc.com/class/641.html" target="_blank">
           《Springboot3+微服务实战12306高性能售票系统》
         </a>
-        难度：<star-outlined /><star-outlined /><star-outlined />
+        难度：
+        <star-outlined/>
+        <star-outlined/>
+        <star-outlined/>
       </div>
       <div>
         实战课：
         <a href="https://coding.imooc.com/class/474.html" target="_blank">
           《Spring Boot+Vue3前后端分离，实战wiki知识库系统》
         </a>
-        难度：<star-outlined />
+        难度：
+        <star-outlined/>
       </div>
       <div>
         实战课：
         <a href="https://coding.imooc.com/class/416.html" target="_blank">
           《Spring Cloud+Vue前后端分离开发企业级在线视频系统》
         </a>
-        难度：<star-outlined /><star-outlined />
+        难度：
+        <star-outlined/>
+        <star-outlined/>
       </div>
       <div>
         免费课：
         <a href="http://www.imooc.com/learn/1160" target="_blank">
           《开发工具IDEA从入门到爱不释手》
         </a>
-        难度：<star-outlined />
+        难度：
+        <star-outlined/>
       </div>
     </div>
   </div>
@@ -121,8 +132,7 @@ import {defineComponent} from 'vue';
 export default defineComponent({
   name: "welcome-view",
   setup() {
-    return {
-    };
+    return {};
   },
 });
 </script>

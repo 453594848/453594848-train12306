@@ -2,10 +2,6 @@ package com.train.generator.gen;
 
 
 import cn.hutool.core.util.StrUtil;
-//import com.train.business.enums.ConfirmOrderStatusEnum;
-//import com.train.business.enums.SeatColEnum;
-//import com.train.business.enums.SeatTypeEnum;
-//import com.train.business.enums.TrainTypeEnum;
 import com.train.member.enums.PassengerTypeEnum;
 
 import java.io.FileOutputStream;
@@ -109,6 +105,7 @@ public class EnumGenerator {
 
     /**
      * 写文件
+     *
      * @param stringBuffer
      */
     public static void writeJs(StringBuffer stringBuffer) {
@@ -121,8 +118,7 @@ public class EnumGenerator {
             osw.close();
         } catch (Exception e) {
             e.printStackTrace();
-        }
-        finally {
+        } finally {
             try {
                 out.close();
             } catch (Exception e) {
