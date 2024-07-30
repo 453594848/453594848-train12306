@@ -1,4 +1,4 @@
-package java.com.wang.train.generator.util;
+package com.train.generator.util;
 
 
 import cn.hutool.core.util.StrUtil;

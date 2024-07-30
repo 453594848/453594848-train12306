@@ -1,8 +1,8 @@
-package java.com.wang.train.generator.gen;
+package com.train.generator.gen;
 
-import com.wang.train.generator.util.DbUtil;
-import com.wang.train.generator.util.Field;
-import com.wang.train.generator.util.FreemarkerUtil;
+import com.train.generator.util.DbUtil;
+import com.train.generator.util.Field;
+import com.train.generator.util.FreemarkerUtil;
 import freemarker.template.TemplateException;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;

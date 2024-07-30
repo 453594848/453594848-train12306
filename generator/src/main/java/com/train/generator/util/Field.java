@@ -1,4 +1,4 @@
-package java.com.wang.train.generator.util;
+package com.train.generator.util;
 
 public class Field {
     private String name; // 字段名：course_id

@@ -1,4 +1,4 @@
-package com.wang.train.business;
+package com.train.business;
 
 
 import org.mybatis.spring.annotation.MapperScan;
