@@ -70,7 +70,7 @@
 </template>
 
 <script>
-import { defineComponent, ref, onMounted } from 'java/com/wang/train/generator/ftl/vue';
+import { defineComponent, ref, onMounted } from 'com/train/generator/ftl/vue';
 import {notification} from "ant-design-vue";
 import axios from "axios";
 

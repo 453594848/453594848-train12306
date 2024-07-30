@@ -1,18 +1,18 @@
-package com.wang.train.${module}.service;
+package com.train.${module}.service;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.util.ObjectUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.wang.train.common.resp.PageResp;
-import com.wang.train.common.util.SnowUtil;
-import com.wang.train.${module}.domain.${Domain};
-import com.wang.train.${module}.domain.${Domain}Example;
-import com.wang.train.${module}.mapper.${Domain}Mapper;
-import com.wang.train.${module}.req.${Domain}QueryReq;
-import com.wang.train.${module}.req.${Domain}SaveReq;
-import com.wang.train.${module}.resp.${Domain}QueryResp;
+import com.train.common.resp.PageResp;
+import com.train.common.util.SnowUtil;
+import com.train.${module}.domain.${Domain};
+import com.train.${module}.domain.${Domain}Example;
+import com.train.${module}.mapper.${Domain}Mapper;
+import com.train.${module}.req.${Domain}QueryReq;
+import com.train.${module}.req.${Domain}SaveReq;
+import com.train.${module}.resp.${Domain}QueryResp;
 import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

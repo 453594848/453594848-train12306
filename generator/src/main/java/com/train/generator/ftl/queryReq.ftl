@@ -1,6 +1,6 @@
-package com.wang.train.${module}.req;
+package com.train.${module}.req;
 
-import com.wang.train.common.req.PageReq;
+import com.train.common.req.PageReq;
 
 public class ${Domain}QueryReq extends PageReq {
 

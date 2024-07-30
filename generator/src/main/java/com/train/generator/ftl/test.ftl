@@ -1,4 +1,4 @@
-package com.wang.train.generator.test;
+package com.train.generator.test;
 
 public class ${domain} {
 
