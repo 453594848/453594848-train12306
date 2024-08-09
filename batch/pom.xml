@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-       <parent>
+    <parent>
         <groupId>com.jiawa</groupId>
         <artifactId>train-12306</artifactId>
         <version>0.0.1-SNAPSHOT</version>
@@ -27,28 +27,28 @@
             <artifactId>spring-boot-starter-quartz</artifactId>
         </dependency>
 
-       <!-- &lt;!&ndash;远程调用openfeign&ndash;&gt;
+        <!-- &lt;!&ndash;远程调用openfeign-->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>
         </dependency>
-        &lt;!&ndash;openfeign默认使用的是loadBalance的负载均衡器  &ndash;&gt;
+        <!--        openfeign默认使用的是loadBalance的负载均衡器  -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-loadbalancer</artifactId>
         </dependency>
+        <!--
+                 限流熔断
+                <dependency>
+                    <groupId>com.alibaba.cloud</groupId>
+                    <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
+                </dependency>
 
-        &lt;!&ndash; 限流熔断 &ndash;&gt;
-        <dependency>
-            <groupId>com.alibaba.cloud</groupId>
-            <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
-        </dependency>
-
-        &lt;!&ndash; sentinel + nacos &ndash;&gt;
-        <dependency>
-            <groupId>com.alibaba.csp</groupId>
-            <artifactId>sentinel-datasource-nacos</artifactId>
-        </dependency>-->
+                 sentinel + nacos
+                <dependency>
+                    <groupId>com.alibaba.csp</groupId>
+                    <artifactId>sentinel-datasource-nacos</artifactId>
+                </dependency>&ndash;&gt;-->
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
