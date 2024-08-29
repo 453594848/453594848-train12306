@@ -12,3 +12,6 @@ spring:
         password: 1
         url: jdbc:mysql://192.168.137.128:3306/train_business
         username: root
+logging:
+    level:
+        root: info

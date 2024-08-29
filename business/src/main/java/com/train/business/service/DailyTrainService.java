@@ -36,6 +36,17 @@ public class DailyTrainService {
     @Resource
     private TrainService trainService;
 
+    @Resource
+    private DailyTrainStationService dailyTrainStationService;
+
+    @Resource
+    private DailyTrainCarriageService dailyTrainCarriageService;
+
+    @Resource
+    private DailyTrainSeatService dailyTrainSeatService;
+
+    @Resource
+    private DailyTrainTicketService dailyTrainTicketService;
 
 
     public void save(DailyTrainSaveReq req) {
@@ -86,6 +97,7 @@ public class DailyTrainService {
 
     /**
      * 生成某日所有车次信息，包括车次、车站、车厢、座位
+     *
      * @param date
      */
     public void genDaily(Date date) {
@@ -119,6 +131,19 @@ public class DailyTrainService {
         dailyTrain.setDate(date);
         dailyTrainMapper.insert(dailyTrain);
 
+        // 生成该车次的车站数据
+        dailyTrainStationService.genDaily(date, train.getCode());
+
+        // 生成该车次的车厢数据
+        dailyTrainCarriageService.genDaily(date, train.getCode());
+
+        // 生成该车次的座位数据
+        dailyTrainSeatService.genDaily(date, train.getCode());
+
+        // 生成该车次的余票数据
+        dailyTrainTicketService.genDaily(dailyTrain, date, train.getCode());
+
+        // 生成令牌余量数据
 
 
         LOG.info("生成日期【{}】车次【{}】的信息结束", DateUtil.formatDate(date), train.getCode());

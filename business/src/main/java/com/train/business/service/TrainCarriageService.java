@@ -32,7 +32,7 @@ public class TrainCarriageService {
     @Resource
     private TrainCarriageMapper trainCarriageMapper;
 
-    public void save(TrainCarriageSaveReq req) {
+     public void save(TrainCarriageSaveReq req) {
         DateTime now = DateTime.now();
 
         // 自动计算出列数和总座位数
@@ -53,6 +53,7 @@ public class TrainCarriageService {
             trainCarriage.setCreateTime(now);
             trainCarriage.setUpdateTime(now);
             trainCarriageMapper.insert(trainCarriage);
+
         } else {
             trainCarriage.setUpdateTime(now);
             trainCarriageMapper.updateByPrimaryKey(trainCarriage);
