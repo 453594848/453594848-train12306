@@ -12,5 +12,6 @@ public class TestJob implements Job {
     @Override
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
         LOG.info("quartz执行");
+
     }
 }

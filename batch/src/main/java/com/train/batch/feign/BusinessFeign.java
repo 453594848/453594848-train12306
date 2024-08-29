@@ -8,4 +8,5 @@ public interface BusinessFeign {
 
 @GetMapping("/hello")
     String text();
+
 }
