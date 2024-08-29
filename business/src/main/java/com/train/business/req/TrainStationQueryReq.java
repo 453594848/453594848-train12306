@@ -2,6 +2,7 @@ package com.train.business.req;
 
 import com.train.common.req.PageReq;
 
+
 public class TrainStationQueryReq extends PageReq {
 
     private String trainCode;

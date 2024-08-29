@@ -69,7 +69,7 @@
 import { defineComponent, ref, onMounted } from 'vue';
 import {notification} from "ant-design-vue";
 import axios from "axios";
-import TrainSelectView from "@/components/train-select.vue";
+import TrainSelectView from "@/components/train-select";
 
 export default defineComponent({
   name: "daily-train-carriage-view",
