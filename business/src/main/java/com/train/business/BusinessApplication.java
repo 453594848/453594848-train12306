@@ -11,7 +11,7 @@ import org.springframework.core.env.Environment;
 
 
 @SpringBootApplication
-@ComponentScan("com.wang")
+@ComponentScan("com.train")
 @MapperScan("com.train.*.mapper")
 public class BusinessApplication {
 

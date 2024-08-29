@@ -93,11 +93,12 @@ public class TrainService {
 
     @Transactional
     public List<TrainQueryResp> queryAll() {
-        List<Train> trainList = selectAll();
-        // LOG.info("再查一次");
-        // trainList = selectAll();
+        TrainExample trainExample = new TrainExample();
+        trainExample.setOrderByClause("code desc");
+        List<Train> trainList = trainMapper.selectByExample(trainExample);
         return BeanUtil.copyToList(trainList, TrainQueryResp.class);
     }
+
 
     public List<Train> selectAll() {
         TrainExample trainExample = new TrainExample();

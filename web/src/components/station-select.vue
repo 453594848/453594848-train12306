@@ -1,11 +1,10 @@
 <template>
-  <a-select v-model:value="name" :filterOption="filterNameOption" :style="'width: ' + localWidth"
-            allowClear
-            placeholder="请选择车站" show-search
-            @change="onChange">
-    <a-select-option v-for="item in stations" :key="item.name" :label="item.name + item.namePinyin + item.namePy"
-                     :value="item.name">
-      {{ item.name }} {{ item.namePinyin }} ~ {{ item.namePy }}
+  <a-select v-model:value="trainCode" show-search allowClear
+            :filterOption="filterTrainCodeOption"
+            @change="onChange" placeholder="请选择车次"
+            :style="'width: ' + _width">
+    <a-select-option v-for="item in trains" :key="item.code" :value="item.code" :label="item.code + item.start + item.end">
+      {{item.code}} {{item.start}} ~ {{item.end}}
     </a-select-option>
   </a-select>
 </template>
@@ -17,31 +16,31 @@ import axios from "axios";
 import {notification} from "ant-design-vue";
 
 export default defineComponent({
-  name: "station-select-view",
+  name: "train-select-view",
   props: ["modelValue", "width"],
   emits: ['update:modelValue', 'change'],
   setup(props, {emit}) {
-    const name = ref();
-    const stations = ref([]);
-    const localWidth = ref(props.width);
+    const trainCode = ref();
+    const trains = ref([]);
+    const _width = ref(props.width);
     if (Tool.isEmpty(props.width)) {
-      localWidth.value = "100%";
+      _width.value = "100%";
     }
 
     // 利用watch，动态获取父组件的值，如果放在onMounted或其它方法里，则只有第一次有效
-    watch(() => props.modelValue, () => {
+    watch(() => props.modelValue, ()=>{
       console.log("props.modelValue", props.modelValue);
-      name.value = props.modelValue;
+      trainCode.value = props.modelValue;
     }, {immediate: true});
 
     /**
-     * 查询所有的车站，用于车站下拉框
+     * 查询所有的车次，用于车次下拉框
      */
-    const queryAllStation = () => {
-      axios.get("/business/station/query-all").then((response) => {
+    const queryAllTrain = () => {
+      axios.get("/business/admin/train/query-all").then((response) => {
         let data = response.data;
         if (data.success) {
-          stations.value = data.content;
+          trains.value = data.content;
         } else {
           notification.error({description: data.message});
         }
@@ -49,9 +48,9 @@ export default defineComponent({
     };
 
     /**
-     * 车站下拉框筛选
+     * 车次下拉框筛选
      */
-    const filterNameOption = (input, option) => {
+    const filterTrainCodeOption = (input, option) => {
       console.log(input, option);
       return option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0;
     };
@@ -62,23 +61,23 @@ export default defineComponent({
      */
     const onChange = (value) => {
       emit('update:modelValue', value);
-      let station = stations.value.filter(item => item.code === value)[0];
-      if (Tool.isEmpty(station)) {
-        station = {};
+      let train = trains.value.filter(item => item.code === value)[0];
+      if (Tool.isEmpty(train)) {
+        train = {};
       }
-      emit('change', station);
+      emit('change', train);
     };
 
     onMounted(() => {
-      queryAllStation();
+      queryAllTrain();
     });
 
     return {
-      name,
-      stations,
-      filterNameOption,
+      trainCode,
+      trains,
+      filterTrainCodeOption,
       onChange,
-      localWidth
+      _width
     };
   },
 });
