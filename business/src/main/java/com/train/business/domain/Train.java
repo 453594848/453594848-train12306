@@ -2,7 +2,7 @@ package com.train.business.domain;
 
 import java.util.Date;
 
-public class Train {
+public class Train implements java.io.Serializable{
     private Long id;
 
     private String code;
