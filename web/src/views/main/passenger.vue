@@ -5,18 +5,18 @@
       <a-button type="primary" @click="onAdd">新增</a-button>
     </a-space>
   </p>
-  <a-table :columns="columns"
-           :dataSource="passengers"
-           :loading="loading"
+  <a-table :dataSource="passengers"
+           :columns="columns"
            :pagination="pagination"
-           @change="handleTableChange">
+           @change="handleTableChange"
+           :loading="loading">
     <template #bodyCell="{ column, record }">
       <template v-if="column.dataIndex === 'operation'">
         <a-space>
           <a-popconfirm
-              cancel-text="取消"
-              ok-text="确认"
-              title="删除后不可恢复，确认删除?" @confirm="onDelete(record)">
+              title="删除后不可恢复，确认删除?"
+              @confirm="onDelete(record)"
+              ok-text="确认" cancel-text="取消">
             <a style="color: red">删除</a>
           </a-popconfirm>
           <a @click="onEdit(record)">编辑</a>
@@ -25,25 +25,25 @@
       <template v-else-if="column.dataIndex === 'type'">
         <span v-for="item in PASSENGER_TYPE_ARRAY" :key="item.code">
           <span v-if="item.code === record.type">
-            {{ item.desc }}
+            {{item.desc}}
           </span>
         </span>
       </template>
     </template>
   </a-table>
-  <a-modal v-model:visible="visible" cancel-text="取消" ok-text="确认"
-           title="乘车人" @ok="handleOk">
-    <a-form :label-col="{span: 4}" :model="passenger" :wrapper-col="{ span: 20 }">
+  <a-modal v-model:visible="visible" title="乘车人" @ok="handleOk"
+           ok-text="确认" cancel-text="取消">
+    <a-form :model="passenger" :label-col="{span: 4}" :wrapper-col="{ span: 20 }">
       <a-form-item label="姓名">
-        <a-input v-model:value="passenger.name"/>
+        <a-input v-model:value="passenger.name" />
       </a-form-item>
       <a-form-item label="身份证">
-        <a-input v-model:value="passenger.idCard"/>
+        <a-input v-model:value="passenger.idCard" />
       </a-form-item>
       <a-form-item label="旅客类型">
         <a-select v-model:value="passenger.type">
           <a-select-option v-for="item in PASSENGER_TYPE_ARRAY" :key="item.code" :value="item.code">
-            {{ item.desc }}
+            {{item.desc}}
           </a-select-option>
         </a-select>
       </a-form-item>
@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import {defineComponent, onMounted, ref} from 'vue';
+import { defineComponent, ref, onMounted } from 'vue';
 import {notification} from "ant-design-vue";
 import axios from "axios";
 
@@ -79,6 +79,11 @@ export default defineComponent({
     });
     let loading = ref(false);
     const columns = [
+      {
+        title: '会员id',
+        dataIndex: 'memberId',
+        key: 'memberId',
+      },
       {
         title: '姓名',
         dataIndex: 'name',
