@@ -2,7 +2,7 @@
   <a-layout-header class="header">
     <div class="logo">
       <router-link to="/welcome" style="color: white; font-size: 18px">
-        12306用户管理系统
+        12306用户中台
       </router-link>
     </div>
     <div style="float: right; color: white;">
