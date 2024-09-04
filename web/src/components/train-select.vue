@@ -37,7 +37,7 @@ export default defineComponent({
      * 查询所有的车次，用于车次下拉框
      */
     const queryAllTrain = () => {
-      axios.get("/business/admin/train/query-all").then((response) => {
+      axios.get("/business/train/query-all").then((response) => {
         let data = response.data;
         if (data.success) {
           trains.value = data.content;

@@ -1,11 +1,13 @@
 <template>
   <p>
     <a-space>
-      <a-button type="primary" @click="handleQuery()">刷新</a-button>
-      <a-button type="primary" @click="onAdd">新增</a-button>
+      <a-date-picker v-model:value="params.date" valueFormat="YYYY-MM-DD" :disabled-date="disabledDate" placeholder="请选择日期"></a-date-picker>
+      <station-select-view v-model="params.start" width="200px"></station-select-view>
+      <station-select-view v-model="params.end" width="200px"></station-select-view>
+      <a-button type="primary" @click="handleQuery()">查找</a-button>
     </a-space>
   </p>
-  <a-table :dataSource="trainStations"
+  <a-table :dataSource="dailyTrainTickets"
            :columns="columns"
            :pagination="pagination"
            @change="handleTableChange"
@@ -13,77 +15,140 @@
     <template #bodyCell="{ column, record }">
       <template v-if="column.dataIndex === 'operation'">
         <a-space>
-          <a-popconfirm
-              title="删除后不可恢复，确认删除?"
-              @confirm="onDelete(record)"
-              ok-text="确认" cancel-text="取消">
-            <a style="color: red">删除</a>
-          </a-popconfirm>
-          <a @click="onEdit(record)">编辑</a>
+          <a-button type="primary" @click="toOrder(record)" :disabled="isExpire(record)">{{isExpire(record) ? "过期" : "预订"}}</a-button>
+          <router-link :to="{
+            path: '/seat',
+            query: {
+              date: record.date,
+              trainCode: record.trainCode,
+              start: record.start,
+              startIndex: record.startIndex,
+              end: record.end,
+              endIndex: record.endIndex
+            }
+          }">
+            <a-button type="primary">座位销售图</a-button>
+          </router-link>
+          <a-button type="primary" @click="showStation(record)">途经车站</a-button>
         </a-space>
+      </template>
+      <template v-else-if="column.dataIndex === 'station'">
+        {{record.start}}<br/>
+        {{record.end}}
+      </template>
+      <template v-else-if="column.dataIndex === 'time'">
+        {{record.startTime}}<br/>
+        {{record.endTime}}
+      </template>
+      <template v-else-if="column.dataIndex === 'duration'">
+        {{calDuration(record.startTime, record.endTime)}}<br/>
+        <div v-if="record.startTime.replaceAll(':', '') >= record.endTime.replaceAll(':', '')">
+          次日到达
+        </div>
+        <div v-else>
+          当日到达
+        </div>
+      </template>
+      <template v-else-if="column.dataIndex === 'ydz'">
+        <div v-if="record.ydz >= 0">
+          {{record.ydz}}<br/>
+          {{record.ydzPrice}}￥
+        </div>
+        <div v-else>
+          --
+        </div>
+      </template>
+      <template v-else-if="column.dataIndex === 'edz'">
+        <div v-if="record.edz >= 0">
+          {{record.edz}}<br/>
+          {{record.edzPrice}}￥
+        </div>
+        <div v-else>
+          --
+        </div>
+      </template>
+      <template v-else-if="column.dataIndex === 'rw'">
+        <div v-if="record.rw >= 0">
+          {{record.rw}}<br/>
+          {{record.rwPrice}}￥
+        </div>
+        <div v-else>
+          --
+        </div>
+      </template>
+      <template v-else-if="column.dataIndex === 'yw'">
+        <div v-if="record.yw >= 0">
+          {{record.yw}}<br/>
+          {{record.ywPrice}}￥
+        </div>
+        <div v-else>
+          --
+        </div>
       </template>
     </template>
   </a-table>
-  <a-modal v-model:visible="visible" title="火车车站" @ok="handleOk"
-           ok-text="确认" cancel-text="取消">
-    <a-form :model="trainStation" :label-col="{span: 4}" :wrapper-col="{ span: 20 }">
-      <a-form-item label="车次编号">
-        <a-select v-model:value="trainStation.trainCode" show-search
-                  :filterOption="filterTrainCodeOption">
-          <a-select-option v-for="item in trains" :key="item.code" :value="item.code" :label="item.code + item.start + item.end">
-            {{item.code}} | {{item.start}} ~ {{item.end}}
-          </a-select-option>
-        </a-select>
-      </a-form-item>
-      <a-form-item label="站序">
-        <a-input v-model:value="trainStation.index" />
-      </a-form-item>
-      <a-form-item label="站名">
-        <a-input v-model:value="trainStation.name" />
-      </a-form-item>
-      <a-form-item label="站名拼音">
-        <a-input v-model:value="trainStation.namePinyin" disabled/>
-      </a-form-item>
-      <a-form-item label="进站时间">
-        <a-time-picker v-model:value="trainStation.inTime" valueFormat="HH:mm:ss" placeholder="请选择时间" />
-      </a-form-item>
-      <a-form-item label="出站时间">
-        <a-time-picker v-model:value="trainStation.outTime" valueFormat="HH:mm:ss" placeholder="请选择时间" />
-      </a-form-item>
-      <a-form-item label="停站时长">
-        <a-time-picker v-model:value="trainStation.stopTime" valueFormat="HH:mm:ss" placeholder="请选择时间" />
-      </a-form-item>
-      <a-form-item label="里程（公里）">
-        <a-input v-model:value="trainStation.km" />
-      </a-form-item>
-    </a-form>
+
+  <!-- 途经车站 -->
+  <a-modal style="top: 30px" v-model:visible="visible" :title="null" :footer="null" :closable="false">
+    <a-table :data-source="stations" :pagination="false">
+      <a-table-column key="index" title="站序" data-index="index" />
+      <a-table-column key="name" title="站名" data-index="name" />
+      <a-table-column key="inTime" title="进站时间" data-index="inTime">
+        <template #default="{ record }">
+          {{record.index === 0 ? '-' : record.inTime}}
+        </template>
+      </a-table-column>
+      <a-table-column key="outTime" title="出站时间" data-index="outTime">
+        <template #default="{ record }">
+          {{record.index === (stations.length - 1) ? '-' : record.outTime}}
+        </template>
+      </a-table-column>
+      <a-table-column key="stopTime" title="停站时长" data-index="stopTime">
+        <template #default="{ record }">
+          {{record.index === 0 || record.index === (stations.length - 1) ? '-' : record.stopTime}}
+        </template>
+      </a-table-column>
+    </a-table>
   </a-modal>
 </template>
 
 <script>
-import {defineComponent, ref, onMounted, watch} from 'vue';
+import { defineComponent, ref, onMounted } from 'vue';
 import {notification} from "ant-design-vue";
 import axios from "axios";
-import {pinyin} from "pinyin-pro";
+import StationSelectView from "@/components/station-select";
+import dayjs from "dayjs";
+import router from "@/router";
 
 export default defineComponent({
-  name: "train-station-view",
+  name: "ticket-view",
+  components: {StationSelectView},
   setup() {
     const visible = ref(false);
-    let trainStation = ref({
+    let dailyTrainTicket = ref({
       id: undefined,
+      date: undefined,
       trainCode: undefined,
-      index: undefined,
-      name: undefined,
-      namePinyin: undefined,
-      inTime: undefined,
-      outTime: undefined,
-      stopTime: undefined,
-      km: undefined,
+      start: undefined,
+      startPinyin: undefined,
+      startTime: undefined,
+      startIndex: undefined,
+      end: undefined,
+      endPinyin: undefined,
+      endTime: undefined,
+      endIndex: undefined,
+      ydz: undefined,
+      ydzPrice: undefined,
+      edz: undefined,
+      edzPrice: undefined,
+      rw: undefined,
+      rwPrice: undefined,
+      yw: undefined,
+      ywPrice: undefined,
       createTime: undefined,
       updateTime: undefined,
     });
-    const trainStations = ref([]);
+    const dailyTrainTickets = ref([]);
     // 分页的三个属性名是固定的
     const pagination = ref({
       total: 0,
@@ -91,119 +156,90 @@ export default defineComponent({
       pageSize: 10,
     });
     let loading = ref(false);
+    const params = ref({});
     const columns = [
-      {
-        title: '车次编号',
-        dataIndex: 'trainCode',
-        key: 'trainCode',
-      },
-      {
-        title: '站序',
-        dataIndex: 'index',
-        key: 'index',
-      },
-      {
-        title: '站名',
-        dataIndex: 'name',
-        key: 'name',
-      },
-      {
-        title: '站名拼音',
-        dataIndex: 'namePinyin',
-        key: 'namePinyin',
-      },
-      {
-        title: '进站时间',
-        dataIndex: 'inTime',
-        key: 'inTime',
-      },
-      {
-        title: '出站时间',
-        dataIndex: 'outTime',
-        key: 'outTime',
-      },
-      {
-        title: '停站时长',
-        dataIndex: 'stopTime',
-        key: 'stopTime',
-      },
-      {
-        title: '里程（公里）',
-        dataIndex: 'km',
-        key: 'km',
-      },
-      {
-        title: '操作',
-        dataIndex: 'operation'
-      }
+    {
+      title: '车次编号',
+      dataIndex: 'trainCode',
+      key: 'trainCode',
+    },
+    {
+      title: '车站',
+      dataIndex: 'station',
+    },
+    {
+      title: '时间',
+      dataIndex: 'time',
+    },
+    {
+      title: '历时',
+      dataIndex: 'duration',
+    },
+    {
+      title: '一等座',
+      dataIndex: 'ydz',
+      key: 'ydz',
+    },
+    {
+      title: '二等座',
+      dataIndex: 'edz',
+      key: 'edz',
+    },
+    {
+      title: '软卧',
+      dataIndex: 'rw',
+      key: 'rw',
+    },
+    {
+      title: '硬卧',
+      dataIndex: 'yw',
+      key: 'yw',
+    },
+    {
+      title: '操作',
+      dataIndex: 'operation',
+    },
     ];
-    watch(() => trainStation.value.name, ()=>{
-      if (Tool.isNotEmpty(trainStation.value.name)) {
-        trainStation.value.namePinyin = pinyin(trainStation.value.name, { toneType: 'none'}).replaceAll(" ", "");
-      } else {
-        trainStation.value.namePinyin = "";
-      }
-    }, {immediate: true});
 
-    const onAdd = () => {
-      trainStation.value = {};
-      visible.value = true;
-    };
-
-    const onEdit = (record) => {
-      trainStation.value = window.Tool.copy(record);
-      visible.value = true;
-    };
-
-    const onDelete = (record) => {
-      axios.delete("/business/admin/train-station/delete/" + record.id).then((response) => {
-        const data = response.data;
-        if (data.success) {
-          notification.success({description: "删除成功！"});
-          handleQuery({
-            page: pagination.value.current,
-            size: pagination.value.pageSize,
-          });
-        } else {
-          notification.error({description: data.message});
-        }
-      });
-    };
-
-    const handleOk = () => {
-      axios.post("/business/admin/train-station/save", trainStation.value).then((response) => {
-        let data = response.data;
-        if (data.success) {
-          notification.success({description: "保存成功！"});
-          visible.value = false;
-          handleQuery({
-            page: pagination.value.current,
-            size: pagination.value.pageSize
-          });
-        } else {
-          notification.error({description: data.message});
-        }
-      });
-    };
 
     const handleQuery = (param) => {
+      if (Tool.isEmpty(params.value.date)) {
+        notification.error({description: "请输入日期"});
+        return;
+      }
+      if (Tool.isEmpty(params.value.start)) {
+        notification.error({description: "请输入出发地"});
+        return;
+      }
+      if (Tool.isEmpty(params.value.end)) {
+        notification.error({description: "请输入目的地"});
+        return;
+      }
       if (!param) {
         param = {
           page: 1,
           size: pagination.value.pageSize
         };
       }
+
+      // 保存查询参数
+      SessionStorage.set(SESSION_TICKET_PARAMS, params.value);
+
       loading.value = true;
-      axios.get("/business/admin/train-station/query-list", {
+      axios.get("/business/daily-train-ticket/query-list", {
         params: {
           page: param.page,
-          size: param.size
+          size: param.size,
+          trainCode: params.value.trainCode,
+          date: params.value.date,
+          start: params.value.start,
+          end: params.value.end
         }
       }).then((response) => {
         loading.value = false;
         let data = response.data;
         if (data.success) {
-          trainStations.value = data.content.list;
+          dailyTrainTickets.value = data.content.list;
           // 设置分页控件的值
           pagination.value.current = param.page;
           pagination.value.total = data.content.total;
@@ -213,64 +249,90 @@ export default defineComponent({
       });
     };
 
-    const handleTableChange = (pagination) => {
-      // console.log("看看自带的分页参数都有啥：" + pagination);
+    const handleTableChange = (page) => {
+      // console.log("看看自带的分页参数都有啥：" + JSON.stringify(page));
+      pagination.value.pageSize = page.pageSize;
       handleQuery({
-        page: pagination.current,
-        size: pagination.pageSize
+        page: page.current,
+        size: page.pageSize
       });
     };
 
-    // ----------------- 车次下拉框 -----------------
-    const trains = ref([]);
+    const calDuration = (startTime, endTime) => {
+      let diff = dayjs(endTime, 'HH:mm:ss').diff(dayjs(startTime, 'HH:mm:ss'), 'seconds');
+      return dayjs('00:00:00', 'HH:mm:ss').second(diff).format('HH:mm:ss');
+    };
 
-    /**
-     * 查询所有的车次，用于车次下拉框
-     */
-    const queryTrainCode = () => {
-      axios.get("/business/admin/train/query-all").then((response) => {
+    const toOrder = (record) => {
+      dailyTrainTicket.value = Tool.copy(record);
+      SessionStorage.set(SESSION_ORDER, dailyTrainTicket.value);
+      router.push("/order")
+    };
+
+    // ---------------------- 途经车站 ----------------------
+    const stations = ref([]);
+    const showStation = record => {
+      visible.value = true;
+      axios.get("/business/daily-train-station/query-by-train-code", {
+        params: {
+          date: record.date,
+          trainCode: record.trainCode
+        }
+      }).then((response) => {
         let data = response.data;
         if (data.success) {
-          trains.value = data.content;
+          stations.value = data.content;
         } else {
           notification.error({description: data.message});
         }
       });
     };
 
-    /**
-     * 车次下拉框筛选
-     */
-    const filterTrainCodeOption = (input, option) => {
-      console.log(input, option);
-      return option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0;
+    // 不能选择今天以前及两周以后的日期
+    const disabledDate = current => {
+      return current && (current <= dayjs().add(-1, 'day') || current > dayjs().add(14, 'day'));
+    };
+
+    // 判断是否过期
+    const isExpire = (record) => {
+      // 标准时间：2000/01/01 00:00:00
+      let startDateTimeString = record.date.replace(/-/g, "/") + " " + record.startTime;
+      let startDateTime = new Date(startDateTimeString);
+
+      //当前时间
+      let now = new Date();
+
+      console.log(startDateTime)
+      return now.valueOf() >= startDateTime.valueOf();
     };
 
     onMounted(() => {
-      handleQuery({
-        page: 1,
-        size: pagination.value.pageSize
-      });
-
-      queryTrainCode();
+      //  "|| {}"是常用技巧，可以避免空指针异常
+      params.value = SessionStorage.get(SESSION_TICKET_PARAMS) || {};
+      if (Tool.isNotEmpty(params.value)) {
+        handleQuery({
+          page: 1,
+          size: pagination.value.pageSize
+        });
+      }
     });
 
     return {
-      trainStation,
+      dailyTrainTicket,
       visible,
-      trainStations,
+      dailyTrainTickets,
       pagination,
       columns,
       handleTableChange,
       handleQuery,
       loading,
-      onAdd,
-      handleOk,
-      onEdit,
-      onDelete,
-      filterTrainCodeOption,
-      trains
-
+      params,
+      calDuration,
+      toOrder,
+      showStation,
+      stations,
+      disabledDate,
+      isExpire
     };
   },
 });

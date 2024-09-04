@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 
 import java.util.Date;
 
-public class DailyTrainQueryResp {
+public class DailyTrainQueryResp implements java.io.Serializable{
 
     /**
      * id

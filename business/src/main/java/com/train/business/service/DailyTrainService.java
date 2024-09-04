@@ -19,6 +19,8 @@ import com.train.common.util.SnowUtil;
 import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -63,6 +65,7 @@ public class DailyTrainService {
         }
     }
 
+    @Cacheable(value = "DailyTrainQueryResp")
     public PageResp<DailyTrainQueryResp> queryList(DailyTrainQueryReq req) {
         DailyTrainExample dailyTrainExample = new DailyTrainExample();
         dailyTrainExample.setOrderByClause("date desc, code asc");
@@ -91,6 +94,7 @@ public class DailyTrainService {
         return pageResp;
     }
 
+    @CacheEvict(value = "DailyTrainQueryResp" , key = "#id")
     public void delete(Long id) {
         dailyTrainMapper.deleteByPrimaryKey(id);
     }

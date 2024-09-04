@@ -1,80 +1,80 @@
 <template>
   <div class="order-train">
-    <span class="order-train-main">{{ dailyTrainTicket.date }}</span>&nbsp;
-    <span class="order-train-main">{{ dailyTrainTicket.trainCode }}</span>次&nbsp;
-    <span class="order-train-main">{{ dailyTrainTicket.start }}</span>站
-    <span class="order-train-main">({{ dailyTrainTicket.startTime }})</span>&nbsp;
+    <span class="order-train-main">{{dailyTrainTicket.date}}</span>&nbsp;
+    <span class="order-train-main">{{dailyTrainTicket.trainCode}}</span>次&nbsp;
+    <span class="order-train-main">{{dailyTrainTicket.start}}</span>站
+    <span class="order-train-main">({{dailyTrainTicket.startTime}})</span>&nbsp;
     <span class="order-train-main">——</span>&nbsp;
-    <span class="order-train-main">{{ dailyTrainTicket.end }}</span>站
-    <span class="order-train-main">({{ dailyTrainTicket.endTime }})</span>&nbsp;
+    <span class="order-train-main">{{dailyTrainTicket.end}}</span>站
+    <span class="order-train-main">({{dailyTrainTicket.endTime}})</span>&nbsp;
 
     <div class="order-train-ticket">
       <span v-for="item in seatTypes" :key="item.type">
-        <span>{{ item.desc }}</span>：
-        <span class="order-train-ticket-main">{{ item.price }}￥</span>&nbsp;
-        <span class="order-train-ticket-main">{{ item.count }}</span>&nbsp;张票&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <span>{{item.desc}}</span>：
+        <span class="order-train-ticket-main">{{item.price}}￥</span>&nbsp;
+        <span class="order-train-ticket-main">{{item.count}}</span>&nbsp;张票&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
       </span>
     </div>
   </div>
   <a-divider></a-divider>
   <b>勾选要购票的乘客：</b>&nbsp;
-  <a-checkbox-group v-model:value="passengerChecks" :options="passengerOptions"/>
+  <a-checkbox-group v-model:value="passengerChecks" :options="passengerOptions" />
 
   <div class="order-tickets">
-    <a-row v-if="tickets.length > 0" class="order-tickets-header">
+    <a-row class="order-tickets-header" v-if="tickets.length > 0">
       <a-col :span="2">乘客</a-col>
       <a-col :span="6">身份证</a-col>
       <a-col :span="4">票种</a-col>
       <a-col :span="4">座位类型</a-col>
     </a-row>
-    <a-row v-for="ticket in tickets" :key="ticket.passengerId" class="order-tickets-row">
-      <a-col :span="2">{{ ticket.passengerName }}</a-col>
-      <a-col :span="6">{{ ticket.passengerIdCard }}</a-col>
+    <a-row class="order-tickets-row" v-for="ticket in tickets" :key="ticket.passengerId">
+      <a-col :span="2">{{ticket.passengerName}}</a-col>
+      <a-col :span="6">{{ticket.passengerIdCard}}</a-col>
       <a-col :span="4">
         <a-select v-model:value="ticket.passengerType" style="width: 100%">
           <a-select-option v-for="item in PASSENGER_TYPE_ARRAY" :key="item.code" :value="item.code">
-            {{ item.desc }}
+            {{item.desc}}
           </a-select-option>
         </a-select>
       </a-col>
       <a-col :span="4">
         <a-select v-model:value="ticket.seatTypeCode" style="width: 100%">
           <a-select-option v-for="item in seatTypes" :key="item.code" :value="item.code">
-            {{ item.desc }}
+            {{item.desc}}
           </a-select-option>
         </a-select>
       </a-col>
     </a-row>
   </div>
   <div v-if="tickets.length > 0">
-    <a-button size="large" type="primary" @click="finishCheckPassenger">提交订单</a-button>
+    <a-button type="primary" size="large" @click="finishCheckPassenger">提交订单</a-button>
   </div>
 
-  <a-modal v-model:visible="visible" cancel-text="取消"
-           ok-text="确认"
-           style="top: 50px; width: 800px" title="请核对以下信息"
+  <a-modal v-model:visible="visible" title="请核对以下信息"
+           style="top: 50px; width: 800px"
+           ok-text="确认" cancel-text="取消"
            @ok="showFirstImageCodeModal">
     <div class="order-tickets">
-      <a-row v-if="tickets.length > 0" class="order-tickets-header">
+      <a-row class="order-tickets-header" v-if="tickets.length > 0">
         <a-col :span="3">乘客</a-col>
         <a-col :span="15">身份证</a-col>
         <a-col :span="3">票种</a-col>
         <a-col :span="3">座位类型</a-col>
       </a-row>
-      <a-row v-for="ticket in tickets" :key="ticket.passengerId" class="order-tickets-row">
-        <a-col :span="3">{{ ticket.passengerName }}</a-col>
-        <a-col :span="15">{{ ticket.passengerIdCard }}</a-col>
+      <a-row class="order-tickets-row" v-for="ticket in tickets" :key="ticket.passengerId">
+        <a-col :span="3">{{ticket.passengerName}}</a-col>
+        <a-col :span="15">{{ticket.passengerIdCard}}</a-col>
         <a-col :span="3">
           <span v-for="item in PASSENGER_TYPE_ARRAY" :key="item.code">
             <span v-if="item.code === ticket.passengerType">
-              {{ item.desc }}
+              {{item.desc}}
             </span>
           </span>
         </a-col>
         <a-col :span="3">
           <span v-for="item in seatTypes" :key="item.code">
             <span v-if="item.code === ticket.seatTypeCode">
-              {{ item.desc }}
+              {{item.desc}}
             </span>
           </span>
         </a-col>
@@ -86,20 +86,18 @@
         <div>12306规则：余票小于一定数量时，不允许选座（本项目以20为例）</div>
       </div>
       <div v-else style="text-align: center">
-        <a-switch v-for="item in SEAT_COL_ARRAY" :key="item.code" v-model:checked="chooseSeatObj[item.code + '1']"
-                  :checked-children="item.desc" :un-checked-children="item.desc"
-                  class="choose-seat-item"/>
+        <a-switch class="choose-seat-item" v-for="item in SEAT_COL_ARRAY" :key="item.code"
+                  v-model:checked="chooseSeatObj[item.code + '1']" :checked-children="item.desc" :un-checked-children="item.desc" />
         <div v-if="tickets.length > 1">
-          <a-switch v-for="item in SEAT_COL_ARRAY" :key="item.code" v-model:checked="chooseSeatObj[item.code + '2']"
-                    :checked-children="item.desc" :un-checked-children="item.desc"
-                    class="choose-seat-item"/>
+          <a-switch class="choose-seat-item" v-for="item in SEAT_COL_ARRAY" :key="item.code"
+                    v-model:checked="chooseSeatObj[item.code + '2']" :checked-children="item.desc" :un-checked-children="item.desc" />
         </div>
-        <div style="color: #999999">提示：您可以选择{{ tickets.length }}个座位</div>
+        <div style="color: #999999">提示：您可以选择{{tickets.length}}个座位</div>
       </div>
       <br>
       <div style="color: red">
         体验排队购票，加入多人一起排队购票：
-        <a-input-number v-model:value="lineNumber" :max="20" :min="0"/>
+        <a-input-number v-model:value="lineNumber" :min="0" :max="20" />
       </div>
       <!--<br/>-->
       <!--最终购票：{{tickets}}-->
@@ -108,7 +106,7 @@
   </a-modal>
 
   <!-- 第二层验证码 后端 -->
-  <a-modal v-model:visible="imageCodeModalVisible" :closable="false" :footer="null" :title="null"
+  <a-modal v-model:visible="imageCodeModalVisible" :title="null" :footer="null" :closable="false"
            style="top: 50px; width: 400px">
     <p style="text-align: center; font-weight: bold; font-size: 18px">
       使用服务端验证码削弱瞬时高峰<br/>
@@ -121,11 +119,11 @@
         </template>
       </a-input>
     </p>
-    <a-button block type="danger" @click="handleOk">输入验证码后开始购票</a-button>
+    <a-button type="danger" block @click="handleOk">输入验证码后开始购票</a-button>
   </a-modal>
 
   <!-- 第一层验证码 纯前端 -->
-  <a-modal v-model:visible="firstImageCodeModalVisible" :closable="false" :footer="null" :title="null"
+  <a-modal v-model:visible="firstImageCodeModalVisible" :title="null" :footer="null" :closable="false"
            style="top: 50px; width: 400px">
     <p style="text-align: center; font-weight: bold; font-size: 18px">
       使用纯前端验证码削弱瞬时高峰<br/>
@@ -134,23 +132,21 @@
     <p>
       <a-input v-model:value="firstImageCodeTarget" placeholder="验证码">
         <template #suffix>
-          {{ firstImageCodeSourceA }} + {{ firstImageCodeSourceB }}
+          {{firstImageCodeSourceA}} + {{firstImageCodeSourceB}}
         </template>
       </a-input>
     </p>
-    <a-button block type="danger" @click="validFirstImageCode">提交验证码</a-button>
+    <a-button type="danger" block @click="validFirstImageCode">提交验证码</a-button>
   </a-modal>
 
-  <a-modal v-model:visible="lineModalVisible" :closable="false" :footer="null" :maskClosable="false" style="top: 50px; width: 400px"
-           title="排队购票">
+  <a-modal v-model:visible="lineModalVisible" title="排队购票" :footer="null" :maskClosable="false" :closable="false"
+           style="top: 50px; width: 400px">
     <div class="book-line">
       <div v-show="confirmOrderLineCount < 0">
-        <loading-outlined/>
-        系统正在处理中...
+        <loading-outlined /> 系统正在处理中...
       </div>
       <div v-show="confirmOrderLineCount >= 0">
-        <loading-outlined/>
-        您前面还有{{ confirmOrderLineCount }}位用户在购票，排队中，请稍候
+        <loading-outlined /> 您前面还有{{confirmOrderLineCount}}位用户在购票，排队中，请稍候
       </div>
     </div>
     <br/>
@@ -160,7 +156,7 @@
 
 <script>
 
-import {computed, defineComponent, onMounted, ref, watch} from 'vue';
+import {defineComponent, ref, onMounted, watch, computed} from 'vue';
 import axios from "axios";
 import {notification} from "ant-design-vue";
 
@@ -216,7 +212,7 @@ export default defineComponent({
     const lineNumber = ref(5);
 
     // 勾选或去掉某个乘客时，在购票列表中加上或去掉一张表
-    watch(() => passengerChecks.value, (newVal, oldVal) => {
+    watch(() => passengerChecks.value, (newVal, oldVal)=>{
       console.log("勾选乘客发生变化", newVal, oldVal)
       // 每次有变化时，把购票列表清空，重新构造列表
       tickets.value = [];
@@ -466,8 +462,8 @@ export default defineComponent({
      */
     const loadFirstImageCode = () => {
       // 获取1~10的数：Math.floor(Math.random()*10 + 1)
-      firstImageCodeSourceA.value = Math.floor(Math.random() * 10 + 1) + 10;
-      firstImageCodeSourceB.value = Math.floor(Math.random() * 10 + 1) + 20;
+      firstImageCodeSourceA.value = Math.floor(Math.random()*10 + 1) + 10;
+      firstImageCodeSourceB.value = Math.floor(Math.random()*10 + 1) + 20;
     };
 
     /**
@@ -558,11 +554,9 @@ export default defineComponent({
   font-size: 18px;
   font-weight: bold;
 }
-
 .order-train .order-train-ticket {
   margin-top: 15px;
 }
-
 .order-train .order-train-ticket .order-train-ticket-main {
   color: red;
   font-size: 18px;
@@ -571,11 +565,9 @@ export default defineComponent({
 .order-tickets {
   margin: 10px 0;
 }
-
 .order-tickets .ant-col {
   padding: 5px 10px;
 }
-
 .order-tickets .order-tickets-header {
   background-color: cornflowerblue;
   border: solid 1px cornflowerblue;
@@ -583,7 +575,6 @@ export default defineComponent({
   font-size: 16px;
   padding: 5px 0;
 }
-
 .order-tickets .order-tickets-row {
   border: solid 1px cornflowerblue;
   border-top: none;

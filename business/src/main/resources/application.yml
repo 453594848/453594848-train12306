@@ -8,10 +8,27 @@ spring:
     application:
         name: business
     datasource:
-        driver-class-name: com.mysql.cj.jdbc.Driver
-        password: 1
-        url: jdbc:mysql://192.168.137.128:3306/train_business
-        username: root
+        driver-class-name: ${business.datasource.driver-class-name}
+        url: jdbc:mysql://${business.datasource.host}:${business.datasource.port}/${business.datasource.database}
+        username: ${business.datasource.username}
+        password: ${business.datasource.password}
+    data:
+        redis:
+            host: ${business.redis.host}
+            port: ${business.redis.port}
+            password: ${business.redis.password}
+            database: ${business.redis.database}
+    cache:
+        type: redis
+        redis:
+            use-key-prefix: true
+            key-prefix: train_cache_
+            cache-null-values: true
+            time-to-live: 60s
+
+
 logging:
     level:
         root: info
+
+

@@ -18,3 +18,7 @@ spring:
     url: jdbc:mysql://${member.datasource.host}:${member.datasource.port}/${member.datasource.database}
     username: ${member.datasource.username}
     password: ${member.datasource.password}
+
+
+
+
