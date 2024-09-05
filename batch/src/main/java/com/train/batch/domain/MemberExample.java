@@ -10,7 +10,6 @@ public class MemberExample {
 
     protected List<Criteria> oredCriteria;
 
-
     public MemberExample() {
         oredCriteria = new ArrayList<>();
     }

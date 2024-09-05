@@ -27,9 +27,20 @@ public class DailyTrainJob implements Job {
         LOG.info("生成15天后的车次数据开始");
         Date date = new Date();
         LOG.info("当前日期：{}", date);
+
+        // 循环生成从今天起未来15天的数据
+    /*    for (int i = 1; i <= 15; i++) {
+            DateTime dateTime = DateUtil.offsetDay(date, i);
+            Date offsetDate = dateTime.toJdkDate();
+            LOG.info("生成 {} 天后的车次数据", i);
+            CommonResp<Object> commonResp = businessFeign.genDaily(offsetDate);
+            LOG.info("生成 {} 天后的车次数据结束，结果：{}", i, commonResp);
+        }*/
         DateTime dateTime = DateUtil.offsetDay(date, 15);
         Date offsetDate = dateTime.toJdkDate();
-       CommonResp<Object> commonResp = businessFeign.genDaily(offsetDate);
-       LOG.info("生成15天后的车次数据结束，结果：{}", commonResp);
+        CommonResp<Object> commonResp = businessFeign.genDaily(offsetDate);
+        LOG.info("生成15天后的车次数据结束，结果：{}", commonResp);
+
+
     }
 }
