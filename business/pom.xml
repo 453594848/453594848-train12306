@@ -44,6 +44,12 @@
             <artifactId>spring-cloud-loadbalancer</artifactId>
         </dependency>
 
+         <!-- 图形验证码 -->
+        <dependency>
+            <groupId>com.github.penggle</groupId>
+            <artifactId>kaptcha</artifactId>
+        </dependency>
+
          <!-- Spring Boot Starter Cache -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

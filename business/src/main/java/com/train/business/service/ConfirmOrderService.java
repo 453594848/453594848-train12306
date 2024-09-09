@@ -17,6 +17,7 @@ import com.train.business.enums.SeatTypeEnum;
 import com.train.business.mapper.ConfirmOrderMapper;
 import com.train.business.req.ConfirmOrderDoReq;
 import com.train.business.req.ConfirmOrderQueryReq;
+import com.train.business.req.ConfirmOrderSaveReq;
 import com.train.business.req.ConfirmOrderTicketReq;
 import com.train.business.resp.ConfirmOrderQueryResp;
 import com.train.common.context.LoginMemberContext;
@@ -199,5 +200,8 @@ public class ConfirmOrderService {
                 }
             }
         }
+    }
+
+    public void save(ConfirmOrderSaveReq req) {
     }
 }
